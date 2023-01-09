@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using CodeMonkey.Utils;
 
-public class Grid
+public class Grid 
 {
     //Attributes of the grid
     int width;
     int height;
-    public float cellSize;
+    float cellSize;
     Vector3 originPosition;
     TextMesh[,] debugTextArray;
     int[,] gridArray;
@@ -41,7 +41,7 @@ public class Grid
         return new Vector3(x, y) * cellSize+this.originPosition;
     }
     //Gets the worldPositions corresponding gridArray
-    private void GetXY(Vector3 worldPosition, out int x, out int y) 
+    public void GetXY(Vector3 worldPosition, out int x, out int y) 
     {
         x = Mathf.FloorToInt((worldPosition-this.originPosition).x / cellSize);
         y = Mathf.FloorToInt((worldPosition-this.originPosition).y / cellSize);
@@ -78,11 +78,10 @@ public class Grid
         int x, y;
         GetXY(worldPosition, out x, out y);
         return GetValue(x, y);
-
     }
-    public void SetMapValues() 
+    public float GetCellSize()
     {
-
+        return cellSize;
     }
 }
 

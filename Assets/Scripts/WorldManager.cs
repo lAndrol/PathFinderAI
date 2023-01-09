@@ -16,7 +16,7 @@ public class WorldManager : MonoBehaviour
     void Start()
     {
         grid = new Grid(gridWidth, gridHeight, 10f,new Vector3(0,0,0));
-        CreateNodeMap(gridWidth,gridHeight, 10f);
+        //CreateNodeMap(gridWidth,gridHeight, 10f);
     }
 
     private void Update()
@@ -26,8 +26,12 @@ public class WorldManager : MonoBehaviour
             grid.SetValue(UtilsClass.GetMouseWorldPosition(), 56);
         }
     }
+    public Grid getGrid()
+    {
+        return grid;
+    }
     //Creates nodes in the center of the grid cells
-    private void CreateNodeMap(int gridwidth, int gridHeight,float cellSize) 
+   /* private void CreateNodeMap(int gridwidth, int gridHeight,float cellSize) 
     {
         for (int x = 0; x < gridwidth; x++) 
         {
@@ -38,6 +42,6 @@ public class WorldManager : MonoBehaviour
             }
         }
     
-    }
+    }*/
    
 }
