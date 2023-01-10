@@ -7,17 +7,28 @@ public class AIMoveController : MonoBehaviour
     Grid grid;
     int positionX, positionY;
     public Stack ShortestStack;
+    GameObject[] PassedPlaces;
+    [SerializeField]GameObject target;
     private void Start()
     {
         Invoke("GetGridFromWorldManager", 0.1f);
         Invoke("MarkNode",0.2f);
     }
-    private void LateUpdate()
+    private void Update()
     {
-        if (Input.GetKeyDown("space"))
+        if (Input.GetMouseButtonDown(0))
         {
-            Invoke("FindWay",1f);
+            Invoke("TeleportToLocation",0.4f);
         }
+        if (this.transform.position ==target.transform.position)
+        {
+            Debug.Log("Caugth");
+        }
+    }
+    public void TeleportToLocation()
+    {
+        this.transform.position = FindWay().position;
+
     }
     public void MoveRight()
     {
@@ -88,11 +99,12 @@ public class AIMoveController : MonoBehaviour
     {
         grid = GameObject.FindGameObjectWithTag("WorldController").GetComponent<WorldManager>().getGrid();
     }
-    void FindWay()
+    Transform FindWay()
     {
         grid.GetXY(this.transform.position, out positionX, out positionY);
         string temp = positionX.ToString() + "," + positionY.ToString();
         GameObject currentNode = GameObject.Find(temp);
-        currentNode.GetComponent<Node>().PrintWay();
+        Transform position = currentNode.GetComponent<Node>().GoToWay();
+        return position;
     }
 }

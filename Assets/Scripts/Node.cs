@@ -21,8 +21,11 @@ public class Node : MonoBehaviour
     public int minStackLenght;
     public bool playerFound = false;
     int minCount = 1;
+    int minDistanceDef = 999;
+    int checkDistanceDef = 99;
     public int minDistance = 999;
     public int checkDistance = 99;
+    public bool justPassed = false;
     enum State
     {
         Searched,
@@ -216,7 +219,6 @@ public class Node : MonoBehaviour
                     if (distance < this.minDistance)
                     {
                         this.minDistance = distance;
-                        Debug.Log(this.gameObject.name + " AND " + minDistance);
                     }
                     if (playerHere)
                     {
@@ -235,9 +237,14 @@ public class Node : MonoBehaviour
                 case State.Searched:
                     if (distance < this.minDistance)
                     {
+                        Debug.Log("This happens");
+                        Debug.Log(distance + "<" + this.minDistance);
+                        Debug.Log(this.name);
                         this.minDistance = distance;
                         this.state = State.BeingSearched;
+                        Debug.Log(distance + "=" + this.minDistance);
                         this.SetDistanceToTarget(mainNode, distance);
+                        
                     }
                     else
                     {
@@ -246,7 +253,6 @@ public class Node : MonoBehaviour
                         this.SetDistanceToTarget(mainNode, distance);
                     }
                     return;
-                    break;
             }
         }
     }
@@ -302,36 +308,43 @@ public class Node : MonoBehaviour
         }
 
     }
-    public void PrintWay()
+    public Transform GoToWay()
     {
         int legalNodeDis=99;
         int index=0;
-        GameObject newNode = this.gameObject;
-        Debug.Log(minDistance + " " + this.gameObject.name);
-        while (newNode.name != "5,7")
-        {
-            for (int i = 0; i < newNode.GetComponent<Node>().legalNodes.Length; i++)
+            checkDistance = 99;
+            for (int i = 0; i < legalNodes.Length; i++)
             {
-                if (newNode.GetComponent<Node>().legalNodes[i] != null)
+                if (legalNodes[i] != null)
                 {
-                    legalNodeDis = newNode.GetComponent<Node>().legalNodes[i].GetComponent<Node>().minDistance;
-                    Debug.Log(newNode.name+" BRAKE "+newNode.GetComponent<Node>().legalNodes[i].GetComponent<Node>().minDistance);
-                    if (legalNodeDis < newNode.GetComponent<Node>().legalNodes[i].GetComponent<Node>().checkDistance)
+                    legalNodeDis = legalNodes[i].GetComponent<Node>().minDistance;
+                    if (legalNodeDis < checkDistance&&!legalNodes[i].GetComponent<Node>().justPassed)
                     {
                         index = i;
-                        newNode.GetComponent<Node>().legalNodes[i].GetComponent<Node>().checkDistance = legalNodeDis;
+                        checkDistance = legalNodeDis;
                     }
-                }
-                
+                }  
             }
-            if (legalNodeDis <= 1)
-            {
-                return;
-            }
-            Debug.Log(newNode.GetComponent<Node>().legalNodes[index].name);
-            newNode = newNode.GetComponent<Node>().legalNodes[index];
-        }
+        legalNodes[index].GetComponent<Node>().ToggleJustPassed();
+        return legalNodes[index].transform;
     }
-    
+
+    public void ToggleJustPassed()
+    {
+        if (this.justPassed)
+        {
+            this.justPassed = false;
+            return;
+        }
+        this.justPassed = true;
+    }
+    public void SetState()
+    {
+        this.state = State.NotSearched;
+        this.minDistance = this.minDistanceDef;
+        this.checkDistance = this.checkDistanceDef;
+    }
 }
+    
+
     
